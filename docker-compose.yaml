@@ -1,0 +1,25 @@
+version: "3.8"
+
+x-db-env: &env
+  environment:
+    MYSQL_ROOT_PASSWORD: reset123
+    MYSQL_DATABASE: snippetbox
+
+x-db-config: &config
+  image: mysql:8.3.0
+  <<: *env
+  networks:
+    - snippetbox
+
+services:
+  db:
+    <<: *config
+    ports:
+      - 3306:3306
+  test-db:
+    <<: *config
+    ports:
+      - 3308:3306
+
+networks:
+  snippetbox:
