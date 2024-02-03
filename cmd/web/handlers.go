@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"strings"
-	"unicode/utf8"
 
 	"snippetbox.ktykhanskyi.net/internal/models"
 	"snippetbox.ktykhanskyi.net/internal/validator"
@@ -16,10 +14,10 @@ import (
 
 
 type snipperCreateForm struct {
-	Title       string
-	Content     string
-	Expires     int
-	validator.Validator
+	Title               string `form:"title"`
+	Content             string `form:"content"`
+	Expires             int    `form:"expires"`
+	validator.Validator        `form:"-"`
 
 }
 
@@ -53,25 +51,13 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 
 
 func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
-    err := r.ParseForm()
+	var form snipperCreateForm
+
+	err := app.decodePostForm(r, &form)
 
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
-	}
-
-	expires, err := strconv.Atoi(r.PostForm.Get("expires"))
-
-	if err != nil {
-       app.clientError(w, http.StatusBadRequest)
-	   return
-	}
-
-	form := snipperCreateForm{
-		Title:       r.PostForm.Get("title"),
-		Content:     r.PostForm.Get("content"),
-		Expires:     expires,
-
 	}
 
 	form.CheckField(validator.NotBlank(form.Title), "title", "This field can not be empty")
