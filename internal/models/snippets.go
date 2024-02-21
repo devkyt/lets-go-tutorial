@@ -53,9 +53,6 @@ func (m *SnippetModel) Get(id int) (Snippet, error) {
 		} else {
 			return Snippet{}, err
 		}
-
-		return Snippet{}, nil
-
 	}
 
 	return s, nil
