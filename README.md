@@ -20,6 +20,7 @@ go run ./cmd/web -addr=":9000"
 
 For tests use:
 ```sh
+docker-compose up test-db -d
 go test ./cmd/web -v
 ```
 
